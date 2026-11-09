@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="cs"><head><meta charset="utf-8">
+<title>Botanika: dvouděložné a jednoděložné</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f5ec;--sf:#fff;--ink:#1d2a14;--mut:#5b6a50;--g:#3d6b1f;--gs:#e0edd0;--ln:#d2dcc7;--ok:#1f6b26;--okb:#d8efd9;--no:#a8231b;--nob:#f9dcd9;--ac:#8a4fa0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141b10;--sf:#1d2717;--ink:#e6eddc;--mut:#9aa88d;--g:#8fc65a;--gs:#2a3a1d;--ln:#2a3822;--ok:#7fd184;--okb:#1f3a22;--no:#f08a82;--nob:#44211f;--ac:#c79ad8}}
+:root[data-theme="dark"]{--bg:#141b10;--sf:#1d2717;--ink:#e6eddc;--mut:#9aa88d;--g:#8fc65a;--gs:#2a3a1d;--ln:#2a3822;--ok:#7fd184;--okb:#1f3a22;--no:#f08a82;--nob:#44211f;--ac:#c79ad8}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;font:17px/1.45 "Source Sans 3",system-ui,sans-serif;color:var(--ink);background-color:var(--bg);background-image:repeating-linear-gradient(transparent 0 31px,var(--ln) 31px 32px)}
+main{max-width:640px;margin:0 auto;padding:16px 14px 48px}
+h1{font:700 40px/1 Caveat,cursive;color:var(--g);margin:6px 0 2px}
+h2{font:700 26px/1.15 Caveat,cursive;margin:0 0 12px}
+.sub{margin:0 0 14px;color:var(--mut)}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+.chip,.opt,.go,.pc{font:inherit;color:var(--ink);cursor:pointer}
+.chip{border:1.5px solid var(--g);background:var(--sf);border-radius:20px;padding:6px 14px}
+.chip.on{background:var(--g);color:var(--sf)}
+.card{background:var(--sf);border:1.5px solid var(--ln);border-left:6px solid var(--ac);border-radius:10px;padding:16px;margin:12px 0}
+.meta{color:var(--mut);margin:0 0 8px;font-size:15px}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;background:var(--bg);border:1.5px solid var(--ln);border-radius:8px;padding:11px 12px}
+.opt:hover:not(:disabled){border-color:var(--g)}
+.opt.ok{background:var(--okb);border-color:var(--ok)}
+.opt.no{background:var(--nob);border-color:var(--no)}
+.go{background:var(--g);color:var(--sf);border:0;border-radius:8px;padding:10px 20px;margin-top:12px;font-weight:600}
+.note{margin:12px 0 0;color:var(--mut)}
+.pool{display:flex;flex-wrap:wrap;gap:8px;min-height:44px;margin-bottom:14px}
+.pc{background:var(--gs);border:1.5px solid var(--g);border-radius:8px;padding:6px 10px}
+.pc.sel{outline:3px solid var(--ac)}
+.pc.ok{background:var(--okb);border-color:var(--ok)}
+.pc.no{background:var(--nob);border-color:var(--no)}
+.box{border:2px dashed var(--g);border-radius:10px;padding:10px;margin-bottom:10px;min-height:76px;cursor:pointer}
+.box b{display:block;font:700 22px Caveat,cursive;color:var(--g)}
+.box div{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.two ul,details ul{margin:6px 0 0;padding-left:18px}
+.two b{color:var(--ac)}
+details{background:var(--sf);border:1.5px solid var(--ln);border-radius:8px;padding:10px 12px;margin:8px 0}
+summary{cursor:pointer;font-weight:600}
+details small{color:var(--mut)}
+.pc{touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;background:var(--sf);border:1.5px solid var(--g);border-bottom-width:4px;border-radius:12px;padding:8px 12px;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,.14);transform:rotate(var(--r,0deg));transition:transform .15s}
+.pc:hover{transform:rotate(0) translateY(-2px)}
+.pc.lift{opacity:.25}
+.ghost{position:fixed;left:0;top:0;z-index:99;pointer-events:none;box-shadow:0 14px 28px rgba(0,0,0,.35)}
+.pool{background:var(--gs);border-radius:12px;padding:10px;min-height:64px;border:2px dashed transparent}
+.box{border:2px solid var(--g);border-top-width:8px;border-radius:12px;background:var(--bg);transition:background .15s,border-color .15s}
+.over{background:var(--gs)!important;border-color:var(--ac)!important}
+:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+@media(max-width:430px){.two{grid-template-columns:1fr}}
+</style></head><body><main>
+<h1>Botanika: čeledi</h1>
+<p class="sub">Trénink dvouděložných a jednoděložných rostlin</p>
+<div class="row" id="cls"></div>
+<div class="row" id="tabs"></div>
+<div id="v"></div>
+</main>
+<script>
+const F=[
+{n:"Lilkovité",c:"d",t:["Plod bobule, byliny z Ameriky","Často jedovaté, obsahují alkaloidy"],p:[["Lilek brambor","stonkové hlízy, alkaloid solanin"],["Rajče jedlé",""],["Paprika roční","alkaloid kapsaicin (pálivost)"],["Rulík zlomocný","alkaloid atropin, jedovatý, v ČR až 2 m"],["Tabák virginský","alkaloid nikotin (závislost)"],["Durman","„andělské trumpety“, halucinace"],["Blín černý",""]]},
+{n:"Bobovité",c:"d",t:["Plod lusk","Květ: křídla + člunek + pavéza","9 tyčinek srostlých + 1 volná","Symbióza s bakteriemi Rhizobium, fixace vzdušného N₂"],p:[["Hrách setý",""],["Čočka kuchyňská",""],["Fazol obecný",""],["Sója luštinatá","může nahrazovat maso, levná produkce"],["Podzemnice olejná","olejnina, plody pod zemí (burák)"],["Akát bílý","trnovník, brání růstu jiných rostlin, pro med"],["Šťodřenec odvislý","okrasný keř"],["Jetel luční","pícnina, krmivo pro zvěř"],["Tolice vojtěška","pícnina, zelené hnojivo"]]},
+{n:"Brukvovité",c:"d",t:["Čtyřčetné květy","Plod šešule nebo šešulka","Tvoří silice (pálivé)"],p:[["Řepka olejka","olejnina, přísada do biopaliv"],["Hořčice bílá","semínka"],["Křen selský","silice"],["Kokoška pastuší tobolka","lístky ve tvaru srdce"],["Penízek rolní","lístky ve tvaru penízků"]]},
+{n:"Bukovité",c:"d",t:["Listnaté stromy mírného pásu s plodem v číšce (dřevnatělé lůžko)"],p:[["Buk lesní","pahorkatiny, plod nažka „bukvice“"],["Dub letní","plod žalud"],["Dub červený","tvrdé pichlavé listy"],["Kaštanovník jedlý","v ČR, ale nepůvodní"]]},
+{n:"Břízovité",c:"d",t:["Stromy a keře, větrosnubné, plod nažka nebo oříšek (bez číšky)"],p:[["Bříza bělokorá",""],["Olše lepkavá","vlhkomilná, lužní lesy, lepkavé listy"],["Olše šedá",""],["Líska obecná","keř, plod oříšek"],["Líska turecká",""],["Habr obecný","dvojitě zubaté listy, kůra mramorová"]]},
+{n:"Růžovité",c:"d",t:["Ovocné stromy, byliny i dřeviny","Plody peckovice, malvice, nažka"],p:[["Růže šípková","základní zástupce, olej do parfémů, plod nažka"],["Broskvoň",""],["Meruňka",""],["Hrušeň obecná",""],["Švestka",""],["Jabloň domácí",""],["Třešeň","plod peckovice"],["Jeřáb ptačí","plod malvice"],["Trnka obecná",""],["Hloh obecný",""],["Ostružiník křovitý",""],["Malinovník",""],["Jahodník obecný",""],["Mochna husí","planá bylina"],["Řepík lékařský","bylina proti zánětům"]]},
+{n:"Pryskyřníkovité",c:"d",t:["Většinou žluté květy, byliny","Často jedovaté, u vody"],p:[["Blatouch obecný","roste u vody"],["Pryskyřník prudký","jedovatý"],["Sasanka hajní",""],["Hlaváček jarní","na skalách, chráněný"],["Čemeřice černá","jedovatá"]]},
+{n:"Hvězdicovité",c:"d",t:["Květenství úbor, byliny, 1000+ druhů","Zásobní látka inulin (ne škrob)"],p:[["Slunečnice roční","kvalitní jedlý olej, olejnina"],["Podběl obecný","na jaře květ, v létě listy, čaj"],["Heřmánek pravý","léčivý, čaj"],["Rmen polní","voňavé listy"],["Bodlák nicí","nenáročný, listy s trny jako ochrana"],["Pcháč bahenní","ostré listy"],["Chrpa modrá",""],["Jiřina zahradní",""],["Lopuch plstnatý","velké listy, zoochorie (háčky na nažkách)"],["Protěž alpská",""],["Řebříček obecný",""],["Sedmikráska obecná",""]]},
+{n:"Hluchavkovité",c:"d",t:["Čtyřhranné stonky","Dvoupyskatá koruna, plod tvrdka","Vonné silice, koření"],p:[["Hluchavka bílá","základní rostlina"],["Majoránka zahradní",""],["Tymián obecný",""],["Dobromysl obecná",""],["Šalvěj luční",""],["Máta peprná",""]]},
+{n:"Lipnicovité",c:"j",t:["Trávy, větrosnubné, nebarevné květy","Stéblo (dutý stonek s kolénky)","Květenství lata nebo klas, plod obilka","V kláscích plevy, plevky, pluchy; osiny"],p:[["Ječmen obecný","dlouhé osiny, na pivo i krmivo"],["Kukuřice setá","teplejší oblasti, u nás krmivo, USA"],["Oves setý","krmivo"],["Proso seté","v ČR málo, pro ptáky"],["Pšenice setá","nejběžnější obilnina"],["Rýže setá","JV Asie, kde je voda"],["Žito seté","tmavá mouka, vysoké tenké stonky"],["Bambusovník rákosolistý","JV Asie, 20 let roste, vykvete a odumře"],["Bojínek luční","planá"],["Cukrovník lékařský","cukrová třtina, tropy"],["Pýr plazivý","oddenek, plazí se"],["Rákos obecný",""],["Srha říznačka","ostrá"]]},
+{n:"Vstavačovité",c:"j",t:["Orchideje: tropy, u nás chráněné","Epifyty, kořeny na jiných rostlinách","Jen 1 tyčinka, velké propracované květy","Plod tobolka s prachovými semínky","Endotrofní mykorhiza s houbami"],p:[["Střevíčník pantoflíček","v ČR, tvar botičky, vzácná"],["Prstnatec májový",""],["Vemeník dvoulistý",""],["Vanilovník plocholistý","koření vanilka, drahá"]]},
+{n:"Liliovité",c:"j",t:["Zásobní orgán cibule","Zelenina, některé jedovaté"],p:[["Cibule kuchyňská",""],["Česnek kuchyňský",""],["Česnek medvědí","podobný konvalince"],["Chřest obecný","asparagus"],["Lilie zlatohlávek","v ČR chráněná"],["Modřenec",""],["Ocún jesenní","kvete na podzim bez listů, jedovatý"],["Pažitka",""],["Pór zahradní",""],["Tulipán","významný celosvětový obchod"],["Vrání oko čtyřlisté","černá bobule, jedovaté"]]}];
+const G=[["Klíčí 2 děložními lístky","d"],["Klíčí 1 děložním lístkem","j"],["Květ pětičetný (5)","d"],["Květ trojčetný (3)","j"],["List: řapík + čepel, bifaciální, zpeřená žilnatina","d"],["List: listová pochva, homofaciální, rovnoběžná žilnatina","j"],["Kořen hlavní + vedlejší (allorhiza), např. pampeliška","d"],["Svazčitý kořen (homorhiza), trávy","j"],["Cévní svazky pravidelně, tloustnou druhotně","d"],["Cévní svazky nepravidelně, netloustnou","j"]];
+const CN={d:"Dvouděložné",j:"Jednoděložné"};
+const $=s=>document.querySelector(s),rnd=a=>a[Math.floor(Math.random()*a.length)],shuf=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+let cls="b",tab="q",mode="mix",Q=null,M=null;
+const pool=()=>F.filter(f=>cls=="b"||f.c==cls);
+const plants=(fs=pool())=>fs.flatMap(f=>f.p.map(p=>({n:p[0],h:p[1],f})));
+function mkQ(m){
+ const t=m=="mix"?rnd(cls=="b"?["pf","pf","ph","cl"]:["pf","pf","ph"]):m,P=pool();
+ if(t=="pf"){const p=rnd(plants());return{q:`Do které čeledi patří ${p.n}?`,opts:shuf([p.f,...shuf(P.filter(f=>f!=p.f)).slice(0,3)]).map(f=>f.n),a:p.f.n,note:(p.h?p.h+". ":"")+CN[p.f.c]+"."}}
+ if(t=="ph"){const ps=plants().filter(p=>p.h),p=rnd(ps);return{q:`Co platí o rostlině ${p.n}?`,opts:shuf([p.h,...shuf(ps.filter(x=>x.h!=p.h)).slice(0,3).map(x=>x.h)]),a:p.h,note:`Čeleď: ${p.f.n}.`}}
+ const p=rnd(plants(F));return{q:`${p.n} je…`,opts:["Dvouděložná","Jednoděložná"],a:p.f.c=="d"?"Dvouděložná":"Jednoděložná",note:`Čeleď: ${p.f.n}.`}}
+function startQ(){const qs=[],seen=new Set();let g=0;while(qs.length<10&&g++<80){const x=mkQ(mode);if(!seen.has(x.q)){seen.add(x.q);qs.push(x)}}Q={qs,i:0,sc:0,wr:[],ans:null}}
+function newM(){const fs=shuf(pool()).slice(0,3),c=[];fs.forEach((f,i)=>shuf(f.p).slice(0,2).forEach(p=>c.push({n:p[0],f:i,box:null})));M={fs,c:shuf(c),sel:null,chk:false}}
+const ch=(a,cur,k)=>a.map(([v,l])=>`<button class="chip${v==cur?" on":""}" data-${k}="${v}">${l}</button>`).join("");
+function render(){
+ $("#cls").innerHTML=ch([["b","Obě skupiny"],["d","Dvouděložné"],["j","Jednoděložné"]],cls,"c");
+ $("#tabs").innerHTML=ch([["q","Trénink"],["m","Přiřazování"],["o","Přehled"]],tab,"t");
+ $("#v").innerHTML=tab=="q"?vQ():tab=="m"?vM2():vO()}
+function vQ(){
+ if(!Q)return`<div class="card"><h2>Co chceš trénovat?</h2><div class="row">${ch([["mix","Mix"],["pf","Rostlina → čeleď"],["ph","Rostlina → popis"],["cl","Dvou- / jednoděložné"]],mode,"m")}</div><button class="go" data-start>Začít (10 otázek)</button></div>`;
+ if(Q.i>=Q.qs.length)return`<div class="card"><h2>Hotovo: ${Q.sc} z ${Q.qs.length}</h2>${Q.wr.length?`<p class="meta">K opakování:</p><ul>${Q.wr.map(x=>`<li>${x.q} <b>${x.a}</b></li>`).join("")}</ul>`:`<p>Bez chyby!</p>`}<div class="row"><button class="go" data-start>Znovu</button><button class="go" data-reset>Změnit nastavení</button></div></div>`;
+ const x=Q.qs[Q.i],a=Q.ans;
+ return`<div class="card"><p class="meta">Otázka ${Q.i+1}/${Q.qs.length}, správně: ${Q.sc}</p><h2>${x.q}</h2><div class="opts">${x.opts.map((o,k)=>`<button class="opt${a!=null?(o==x.a?" ok":k==a?" no":""):""}" data-o="${k}"${a!=null?" disabled":""}>${o}</button>`).join("")}</div>${a!=null?`<p class="note">${x.note}</p><button class="go" data-next>Další</button>`:""}</div>`}
+function vM(){
+ if(!M)newM();
+ const pc=(c,i)=>`<button class="pc${M.sel==i?" sel":""}${M.chk?(c.box==c.f?" ok":" no"):""}" data-p="${i}">${c.n}</button>`,all=M.c.every(c=>c.box!=null);
+ const ok=M.c.filter(c=>c.box==c.f).length;
+ return`<div class="card"><p class="meta">Ťukni na rostlinu a pak na čeleď, do které patří. Ťuknutím na zařazenou ji vrátíš.</p><div class="pool">${M.c.map((c,i)=>c.box==null?pc(c,i):"").join("")}</div>${M.fs.map((f,b)=>`<div class="box" data-b="${b}"><b>${f.n}</b><div>${M.c.map((c,i)=>c.box==b?pc(c,i):"").join("")}</div></div>`).join("")}${M.chk?`<p><b>Správně ${ok} ze ${M.c.length}.</b></p><button class="go" data-new>Nová hra</button>`:`<button class="go" data-chk${all?"":" disabled"}>Zkontrolovat</button>`}</div>`}
+function vM2(){
+ if(!M)newM();
+ const pc=(c,i)=>`<div class="pc${M.sel==i?" sel":""}${M.chk?(c.box==c.f?" ok":" no"):""}" data-p="${i}" style="--r:${(i*37%7)-3}deg">${c.n}</div>`,all=M.c.every(c=>c.box!=null),ok=M.c.filter(c=>c.box==c.f).length;
+ return`<div class="card"><p class="meta">Přetáhni rostliny do správných čeledí. Jde to i ťuknutím: rostlina, pak čeleď.</p><div class="pool" data-b="-1">${M.c.map((c,i)=>c.box==null?pc(c,i):"").join("")}</div>${M.fs.map((f,b)=>`<div class="box" data-b="${b}"><b>${f.n}</b><div>${M.c.map((c,i)=>c.box==b?pc(c,i):"").join("")}</div></div>`).join("")}${M.chk?`<p><b>Správně ${ok} ze ${M.c.length}.</b></p><button class="go" data-new>Nová hra</button>`:`<button class="go" data-chk${all?"":" disabled"}>Zkontrolovat</button>`}</div>`}
+function vO(){
+ return pool().map(f=>`<details><summary>${f.n} <small>${CN[f.c]}</small></summary><ul>${f.p.map(p=>`<li>${p[0]}${p[1]?`: <small>${p[1]}</small>`:""}</li>`).join("")}</ul></details>`).join("")}
+document.addEventListener("click",e=>{
+ if(Date.now()-sw<300)return;const d=e.target.closest("button,.box,.pc,.pool");if(!d)return;const s=d.dataset;
+ if(s.c){cls=s.c;Q=null;M=null}
+ else if(s.t)tab=s.t;
+ else if(s.m)mode=s.m;
+ else if("start"in s)startQ();
+ else if("reset"in s)Q=null;
+ else if(s.o&&Q.ans==null){const x=Q.qs[Q.i];Q.ans=+s.o;if(x.opts[s.o]==x.a)Q.sc++;else Q.wr.push(x)}
+ else if("next"in s){Q.i++;Q.ans=null}
+ else if(s.p){const i=+s.p;if(M.chk)return;const c=M.c[i];if(c.box!=null)c.box=null;else M.sel=M.sel==i?null:i}
+ else if(s.b!=null){if(M.sel!=null&&!M.chk){M.c[M.sel].box=+s.b<0?null:+s.b;M.sel=null}}
+ else if("chk"in s)M.chk=true;
+ else if("new"in s)newM();
+ render()});
+let sw=0,D=null;
+const tgt=e=>{const n=document.elementFromPoint(e.clientX,e.clientY);return n&&n.closest("[data-b]")};
+const clr=()=>document.querySelectorAll(".over").forEach(n=>n.classList.remove("over"));
+document.addEventListener("pointerdown",e=>{const el=e.target.closest(".pc");if(!el||tab!="m"||!M||M.chk)return;const r=el.getBoundingClientRect();D={i:+el.dataset.p,el,x:e.clientX,y:e.clientY,dx:e.clientX-r.left,dy:e.clientY-r.top,w:r.width,mv:false,g:null};try{el.setPointerCapture(e.pointerId)}catch(_){}});
+document.addEventListener("pointermove",e=>{if(!D)return;if(!D.mv){if(Math.hypot(e.clientX-D.x,e.clientY-D.y)<6)return;D.mv=true;D.g=D.el.cloneNode(true);D.g.classList.add("ghost");D.g.style.width=D.w+"px";document.body.appendChild(D.g);D.el.classList.add("lift")}D.g.style.transform=`translate(${e.clientX-D.dx}px,${e.clientY-D.dy}px) rotate(4deg)`;clr();const t=tgt(e);if(t)t.classList.add("over")});
+document.addEventListener("pointerup",e=>{if(!D)return;const d=D;D=null;if(!d.mv)return;d.g.remove();clr();const t=tgt(e);if(t)M.c[d.i].box=+t.dataset.b<0?null:+t.dataset.b;M.sel=null;sw=Date.now();render()});
+document.addEventListener("pointercancel",()=>{if(D&&D.g)D.g.remove();D=null;clr();render()});
+render();
+</script></body></html>
